@@ -1,0 +1,10 @@
+.*
+!.gitignore
+!.github
+
+output
+generated-docs
+node_modules
+
+dist/
+prod/
