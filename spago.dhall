@@ -4,7 +4,7 @@
   , "debug"
   , "effect"
   , "halogen"
-  , "node-fs"
+  , "node-fs-aff"
   , "parsing"
   , "polymorphic-vectors"
   , "psci-support"
