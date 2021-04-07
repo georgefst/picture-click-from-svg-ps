@@ -14,7 +14,8 @@ main :: Effect Unit
 main = do
   inSvg <- readTextFile UTF8 "test/inputs/oxford-colleges.svg"
   expected <- readTextFile UTF8 "test/outputs/oxford-colleges.txt"
-  res <- app inSvg
+  let
+    res = app inSvg
   for_ res.warnings log
   case res.result of
     Left _ -> throwException $ error "couldn't parse input file"

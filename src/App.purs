@@ -22,7 +22,6 @@ import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..), uncurry)
 import Data.Tuple.Nested (Tuple3, Tuple6, tuple3, tuple6)
 import Data.Vector.Polymorphic (Vector2(..), getX, getY)
-import Effect (Effect)
 import Svg.Parser (Element, SvgAttribute(..), SvgNode(..), parseToSvgNode)
 import Text.Parsing.Parser (Parser, fail, runParser)
 import Text.Parsing.Parser.Combinators (option, sepBy, sepBy1)
@@ -34,17 +33,15 @@ data Error
 
 app ::
   String ->
-  Effect { warnings :: Array String, result :: Either Error String }
-app inSvg = do
-  case parseToSvgNode inSvg of
-    Left e -> pure { warnings: [], result: Left $ ParseError e }
-    Right doc -> do
-      let
-        Tuple entries warnings = runWriter $ allShapes doc
-      pure
-        { warnings: warnings <#> \(Warning s x) -> s <> " (" <> x <> ")"
-        , result: Right $ intercalate "\n" $ map renderShape entries
-        }
+  { warnings :: Array String, result :: Either Error String }
+app inSvg = case parseToSvgNode inSvg of
+  Left e -> { warnings: [], result: Left $ ParseError e }
+  Right doc ->
+    { warnings: warnings <#> \(Warning s x) -> s <> " (" <> x <> ")"
+    , result: Right $ intercalate "\n" $ map renderShape entries
+    }
+    where
+    Tuple entries warnings = runWriter $ allShapes doc
 
 allShapes :: SvgNode -> M (Array Shape)
 allShapes = case _ of
